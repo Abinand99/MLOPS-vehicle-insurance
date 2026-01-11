@@ -1,110 +1,73 @@
-import sys
-from src.entity.config_entity import VehiclePredictorConfig
-from src.entity.s3_estimator import Proj1Estimator
-from src.exception import MyException
-from src.logger import logging
-from pandas import DataFrame
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f6f8;
+}
 
+.container {
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
-class VehicleData:
-    def __init__(self,
-                Gender,
-                Age,
-                Driving_License,
-                Region_Code,
-                Previously_Insured,
-                Annual_Premium,
-                Policy_Sales_Channel,
-                Vintage,
-                Vehicle_Age_lt_1_Year,
-                Vehicle_Age_gt_2_Years,
-                Vehicle_Damage_Yes
-                ):
-        """
-        Vehicle Data constructor
-        Input: all features of the trained model for prediction
-        """
-        try:
-            self.Gender = Gender
-            self.Age = Age
-            self.Driving_License = Driving_License
-            self.Region_Code = Region_Code
-            self.Previously_Insured = Previously_Insured
-            self.Annual_Premium = Annual_Premium
-            self.Policy_Sales_Channel = Policy_Sales_Channel
-            self.Vintage = Vintage
-            self.Vehicle_Age_lt_1_Year = Vehicle_Age_lt_1_Year
-            self.Vehicle_Age_gt_2_Years = Vehicle_Age_gt_2_Years
-            self.Vehicle_Damage_Yes = Vehicle_Damage_Yes
+h1 {
+    color: #333;
+}
 
-        except Exception as e:
-            raise MyException(e, sys) from e
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-    def get_vehicle_input_data_frame(self)-> DataFrame:
-        """
-        This function returns a DataFrame from USvisaData class input
-        """
-        try:
-            
-            vehicle_input_dict = self.get_vehicle_data_as_dict()
-            return DataFrame(vehicle_input_dict)
-        
-        except Exception as e:
-            raise MyException(e, sys) from e
+label {
+    text-align: left;
+    color: #555;
+    font-weight: bold;
+}
 
+input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
-    def get_vehicle_data_as_dict(self):
-        """
-        This function returns a dictionary from VehicleData class input
-        """
-        logging.info("Entered get_usvisa_data_as_dict method as VehicleData class")
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-        try:
-            input_data = {
-                "Gender": [self.Gender],
-                "Age": [self.Age],
-                "Driving_License": [self.Driving_License],
-                "Region_Code": [self.Region_Code],
-                "Previously_Insured": [self.Previously_Insured],
-                "Annual_Premium": [self.Annual_Premium],
-                "Policy_Sales_Channel": [self.Policy_Sales_Channel],
-                "Vintage": [self.Vintage],
-                "Vehicle_Age_lt_1_Year": [self.Vehicle_Age_lt_1_Year],
-                "Vehicle_Age_gt_2_Years": [self.Vehicle_Age_gt_2_Years],
-                "Vehicle_Damage_Yes": [self.Vehicle_Damage_Yes]
-            }
+button:hover {
+    background-color: #0056b3;
+}
 
-            logging.info("Created vehicle data dict")
-            logging.info("Exited get_vehicle_data_as_dict method as VehicleData class")
-            return input_data
+.train-button {
+    background-color: #28a745;
+    margin-top: 15px;
+}
 
-        except Exception as e:
-            raise MyException(e, sys) from e
+.train-button:hover {
+    background-color: #218838;
+}
 
-class VehicleDataClassifier:
-    def __init__(self,prediction_pipeline_config: VehiclePredictorConfig = VehiclePredictorConfig(),) -> None:
-        """
-        :param prediction_pipeline_config: Configuration for prediction the value
-        """
-        try:
-            self.prediction_pipeline_config = prediction_pipeline_config
-        except Exception as e:
-            raise MyException(e, sys)
+.result {
+    margin-top: 20px;
+}
 
-    def predict(self, dataframe) -> str:
-        """
-        This is the method of VehicleDataClassifier
-        Returns: Prediction in string format
-        """
-        try:
-            logging.info("Entered predict method of VehicleDataClassifier class")
-            model = Proj1Estimator(
-                bucket_name=self.prediction_pipeline_config.model_bucket_name,
-                model_path=self.prediction_pipeline_config.model_file_path,
-            )
-            result =  model.predict(dataframe)
-            
-            return result
-        
-        except Exception as e:
-            raise MyException(e, sys)
+.result h2 {
+    color: #007bff;
+}
