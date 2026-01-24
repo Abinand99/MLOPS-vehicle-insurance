@@ -1,110 +1,62 @@
-import sys
-from src.entity.config_entity import VehiclePredictorConfig
-from src.entity.s3_estimator import Proj1Estimator
-from src.exception import MyException
-from src.logger import logging
-from pandas import DataFrame
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Insurance Prediction</title>
+    <!-- Corrected the CSS path -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Vehicle Insurance Prediction</h1>
 
+        <form method="post" action="/">
+            <label for="Gender">Gender (1: Male, 0: Female):</label>
+            <input type="number" id="Gender" name="Gender" min="0" max="1" required>
 
-class VehicleData:
-    def __init__(self,
-                Gender,
-                Age,
-                Driving_License,
-                Region_Code,
-                Previously_Insured,
-                Annual_Premium,
-                Policy_Sales_Channel,
-                Vintage,
-                Vehicle_Age_lt_1_Year,
-                Vehicle_Age_gt_2_Years,
-                Vehicle_Damage_Yes
-                ):
-        """
-        Vehicle Data constructor
-        Input: all features of the trained model for prediction
-        """
-        try:
-            self.Gender = Gender
-            self.Age = Age
-            self.Driving_License = Driving_License
-            self.Region_Code = Region_Code
-            self.Previously_Insured = Previously_Insured
-            self.Annual_Premium = Annual_Premium
-            self.Policy_Sales_Channel = Policy_Sales_Channel
-            self.Vintage = Vintage
-            self.Vehicle_Age_lt_1_Year = Vehicle_Age_lt_1_Year
-            self.Vehicle_Age_gt_2_Years = Vehicle_Age_gt_2_Years
-            self.Vehicle_Damage_Yes = Vehicle_Damage_Yes
+            <label for="Age">Age:</label>
+            <input type="number" id="Age" name="Age" required>
 
-        except Exception as e:
-            raise MyException(e, sys) from e
+            <label for="Driving_License">Driving License (0: No, 1: Yes):</label>
+            <input type="number" id="Driving_License" name="Driving_License" min="0" max="1" required>
 
-    def get_vehicle_input_data_frame(self)-> DataFrame:
-        """
-        This function returns a DataFrame from USvisaData class input
-        """
-        try:
-            
-            vehicle_input_dict = self.get_vehicle_data_as_dict()
-            return DataFrame(vehicle_input_dict)
-        
-        except Exception as e:
-            raise MyException(e, sys) from e
+            <label for="Region_Code">Region Code:</label>
+            <input type="number" step="0.01" id="Region_Code" name="Region_Code" required>
 
+            <label for="Previously_Insured">Previously Insured (0: No, 1: Yes):</label>
+            <input type="number" id="Previously_Insured" name="Previously_Insured" min="0" max="1" required>
 
-    def get_vehicle_data_as_dict(self):
-        """
-        This function returns a dictionary from VehicleData class input
-        """
-        logging.info("Entered get_usvisa_data_as_dict method as VehicleData class")
+            <label for="Annual_Premium">Annual Premium:</label>
+            <input type="number" step="0.01" id="Annual_Premium" name="Annual_Premium" required>
 
-        try:
-            input_data = {
-                "Gender": [self.Gender],
-                "Age": [self.Age],
-                "Driving_License": [self.Driving_License],
-                "Region_Code": [self.Region_Code],
-                "Previously_Insured": [self.Previously_Insured],
-                "Annual_Premium": [self.Annual_Premium],
-                "Policy_Sales_Channel": [self.Policy_Sales_Channel],
-                "Vintage": [self.Vintage],
-                "Vehicle_Age_lt_1_Year": [self.Vehicle_Age_lt_1_Year],
-                "Vehicle_Age_gt_2_Years": [self.Vehicle_Age_gt_2_Years],
-                "Vehicle_Damage_Yes": [self.Vehicle_Damage_Yes]
-            }
+            <label for="Policy_Sales_Channel">Policy Sales Channel:</label>
+            <input type="number" step="0.01" id="Policy_Sales_Channel" name="Policy_Sales_Channel" required>
 
-            logging.info("Created vehicle data dict")
-            logging.info("Exited get_vehicle_data_as_dict method as VehicleData class")
-            return input_data
+            <label for="Vintage">Vintage:</label>
+            <input type="number" id="Vintage" name="Vintage" required>
 
-        except Exception as e:
-            raise MyException(e, sys) from e
+            <label for="Vehicle_Age_lt_1_Year">Vehicle Age < 1 Year (0: No, 1: Yes):</label>
+            <input type="number" id="Vehicle_Age_lt_1_Year" name="Vehicle_Age_lt_1_Year" min="0" max="1" required>
 
-class VehicleDataClassifier:
-    def __init__(self,prediction_pipeline_config: VehiclePredictorConfig = VehiclePredictorConfig(),) -> None:
-        """
-        :param prediction_pipeline_config: Configuration for prediction the value
-        """
-        try:
-            self.prediction_pipeline_config = prediction_pipeline_config
-        except Exception as e:
-            raise MyException(e, sys)
+            <label for="Vehicle_Age_gt_2_Years">Vehicle Age > 2 Years (0: No, 1: Yes):</label>
+            <input type="number" id="Vehicle_Age_gt_2_Years" name="Vehicle_Age_gt_2_Years" min="0" max="1" required>
 
-    def predict(self, dataframe) -> str:
-        """
-        This is the method of VehicleDataClassifier
-        Returns: Prediction in string format
-        """
-        try:
-            logging.info("Entered predict method of VehicleDataClassifier class")
-            model = Proj1Estimator(
-                bucket_name=self.prediction_pipeline_config.model_bucket_name,
-                model_path=self.prediction_pipeline_config.model_file_path,
-            )
-            result =  model.predict(dataframe)
-            
-            return result
-        
-        except Exception as e:
-            raise MyException(e, sys)
+            <label for="Vehicle_Damage_Yes">Vehicle Damage (0: No, 1: Yes):</label>
+            <input type="number" id="Vehicle_Damage_Yes" name="Vehicle_Damage_Yes" min="0" max="1" required>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <form method="get" action="/train">
+            <button type="submit" class="train-button">Train Model</button>
+        </form>
+
+        {% if context %}
+            <div class="result">
+                <h2>Result: {{ context }}</h2>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
